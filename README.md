@@ -5,8 +5,8 @@ UART通信とCAN通信に対応しています。従来のrogilinkに比べて�
 
 ## Other Environments
 
-- [rogilinkFlex-ros2]()
-- [rogilinkFlex-esp32]() (動作未確認)
+- [rogilinkFlex-ros2](https://github.com/KeioRoboticsAssociation/rogilinkFlex-ros2)
+- [rogilinkFlex-esp32](https://github.com/KeioRoboticsAssociation/rogilinkFlex-esp32) (動作未確認)
 
 ## 使い方(UART通信)
 

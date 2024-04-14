@@ -15,7 +15,7 @@ void sub_callback(float a, int b, double c, char* d) {
 int main() {
     sub.set_callback(sub_callback);
 }
-#else
+#elif 0
 #include <mbed.h>
 #include "RogiLinkFlex/UartLink.hpp"
 
@@ -32,5 +32,20 @@ void sub_callback(float a, int b, double c, char* d) {
 int main() {
     sub.set_callback(sub_callback);
 }
+#else
+#include <mbed.h>
+#include "RogiLinkFlex/UartLink.hpp"
 
+UartLink uart(USBTX, USBRX, 115200, nullptr, 0);
+
+UartLinkSubscriber<float, int, double, char*> sub(uart, 2);
+UartLinkPublisher<float, int, double, char*> pub(uart, 2);
+
+void sub_callback(float a, int b, double c, char* d) {
+    pub.publish(a, b, c, d);
+}
+
+int main() {
+    sub.set_callback(sub_callback);
+}
 #endif

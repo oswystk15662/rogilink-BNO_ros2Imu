@@ -82,6 +82,7 @@
                 "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/STM32Cube_FW/STM32F4xx_HAL_Driver/Legacy",
                 "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F446xE",
                 "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F446xE/TARGET_NUCLEO_F446RE",
+                "/home/ryunosuke/pio_workspace/Communication/rogilinkFlex_f446/.pio/libdeps/nucleo_f446re/Unity/src",
                 ""
             ],
             "browse": {
@@ -161,6 +162,7 @@
                     "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/STM32Cube_FW/STM32F4xx_HAL_Driver/Legacy",
                     "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F446xE",
                     "/home/ryunosuke/.platformio/packages/framework-mbed/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F446xE/TARGET_NUCLEO_F446RE",
+                    "/home/ryunosuke/pio_workspace/Communication/rogilinkFlex_f446/.pio/libdeps/nucleo_f446re/Unity/src",
                     ""
                 ]
             },

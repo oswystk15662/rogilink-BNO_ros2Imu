@@ -13,9 +13,24 @@ void receive_callback(float_t goal_0, float_t goal_1, float_t goal_2) {
 }
 
 int main() {
-  // メッセージ送信
-  while (1) {
-    sub.set_callback(receive_callback);
-    // printf("goal_r: %f, goal_theta: %f, goal_z: %f\n", goal_r, goal_theta, goal_z);
-  }
+    sub.set_callback(sub_callback);
 }
+#else
+#include <mbed.h>
+#include "RogiLinkFlex/UartLink.hpp"
+
+UartLink uart1(USBTX, USBRX, 115200, nullptr, 1);
+UartLink uart2(PA_9, PA_10, 115200, nullptr, 1);
+
+UartLinkSubscriber<float, int, double, char*> sub(uart2, 1);
+UartLinkPublisher<float, int, double, char*> pub(uart1, 2);
+
+void sub_callback(float a, int b, double c, char* d) {
+    pub.publish(a, b, c, d);
+}
+
+int main() {
+    sub.set_callback(sub_callback);
+}
+
+#endif

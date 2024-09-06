@@ -24,12 +24,7 @@ UartLink uart(TXピン, RXピン, ボーレート);
 ```cpp
 UartLinkPublisher<データ型1, データ型2, ...> pub(uart, フレームID); // publisherの設定
 
-pub.publish(データ1, データ2, ...);
-```
-
-`UartLinkPublisher<char*>`の場合は、`printf`を使うことができます。
-```cpp
-pub.printf("a: %d, b: %d, c: %d\n", a, b, c);
+pub.send(データ1, データ2, ...);
 ```
 
 ### データの受信

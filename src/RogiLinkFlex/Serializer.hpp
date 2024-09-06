@@ -25,10 +25,24 @@ serialize(uint8_t* buffer, size_t* size, const T data){
 // std::vectorのシリアライズ
 template <typename T>
 void serialize(uint8_t* buffer, size_t* size, const std::vector<T>& data){
-    serialize(buffer, 1, data.size()); // 長さを格納
+    size_t s;
+    serialize(buffer, &s, (uint8_t)data.size()); // 長さを格納
     int offset = 1;
     for (const T& d : data) {
-        uint8_t s;
+        serialize(buffer + offset, &s, d); // データを格納
+        offset += s;
+    }
+    *size = offset;
+};
+
+// std::arrayのシリアライズ
+// TODO: 動作確認
+template <typename T, size_t N>
+void serialize(uint8_t* buffer, size_t* size, const std::array<T, N>& data){
+    size_t s;
+    serialize(buffer, &s, (uint8_t)data.size()); // 長さを格納
+    int offset = 1;
+    for (const T& d : data) {
         serialize(buffer + offset, &s, d); // データを格納
         offset += s;
     }
@@ -37,7 +51,7 @@ void serialize(uint8_t* buffer, size_t* size, const std::vector<T>& data){
 
 // user-defined typeのシリアライズ
 template <typename T>
-typename std::enable_if<!std::is_arithmetic<T>::value && !std::is_same<T, char*>::value && !std::is_same<T, std::vector<typename T::value_type> >::value>::type
+typename std::enable_if<!std::is_arithmetic<T>::value && !std::is_same<T, char*>::value && !std::is_same<T, std::vector<typename T::value_type> >::value && !std::is_same<T, std::array<typename T::value_type, T::size()> >::value>::type
 serialize(uint8_t* buffer, size_t* size, const T data){
     data.serialize(buffer, size); // serialize関数が定義されていることを期待
 };
@@ -72,7 +86,7 @@ deserialize(const uint8_t* buffer, T* data, size_t* size){
 // std::vectorのデシリアライズ
 template <typename T>
 void deserialize(const uint8_t* buffer, std::vector<T>* data, size_t* size){
-    size_t len;
+    uint8_t len;
     deserialize(buffer, &len, size); // 長さを取得
     int offset = 1;
     for (int i = 0; i < len; i++) {
@@ -85,9 +99,24 @@ void deserialize(const uint8_t* buffer, std::vector<T>* data, size_t* size){
     *size = offset;
 };
 
+// std::arrayのデシリアライズ
+// TODO: 動作確認
+template <typename T, size_t N>
+void deserialize(const uint8_t* buffer, std::array<T, N>* data, size_t* size){
+    uint8_t len;
+    deserialize(buffer, &len, size); // 長さを取得
+    int offset = 1;
+    for (int i = 0; i < N; i++) {
+        size_t s;
+        deserialize(buffer + offset, &(*data)[i], &s); // データを取得
+        offset += s;
+    }
+    *size = offset;
+};
+
 // user-defined typeのデシリアライズ
 template <typename T>
-typename std::enable_if<!std::is_arithmetic<T>::value && !std::is_same<T, char*>::value && !std::is_same<T, std::vector<typename T::value_type> >::value>::type
+typename std::enable_if<!std::is_arithmetic<T>::value && !std::is_same<T, char*>::value && !std::is_same<T, std::vector<typename T::value_type> >::value && !std::is_same<T, std::array<typename T::value_type, T::size()> >::value>::type
 deserialize(const uint8_t* buffer, T* data, size_t* size){
     data->deserialize(buffer, size); // deserialize関数が定義されていることを期待
 };

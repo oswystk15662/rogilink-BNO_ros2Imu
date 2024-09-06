@@ -17,7 +17,7 @@ public:
     // 送信処理(継承先で実装する)
     virtual void send(uint8_t frame_id, uint8_t* buffer, size_t size);
     
-    // コールバック登録(Subsriberから呼ばれる)
+    // コールバック登録(Subscriberから呼ばれる)
     void add_callback(uint8_t frame_id, std::function<void(uint8_t*, size_t)> callback);
 
     // 受信時の処理。登録されたコールバックを呼ぶ

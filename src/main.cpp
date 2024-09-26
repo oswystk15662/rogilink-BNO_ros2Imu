@@ -1,23 +1,29 @@
-#include "RogiLinkFlex/Publisher.hpp"
-#include "RogiLinkFlex/Subscriber.hpp"
+#include <mbed.h>
 #include "RogiLinkFlex/UartLink.hpp"
-#include "mbed.h"
 
-UartLink uart_link(USBTX, USBRX, 115200, nullptr, 0);
+#include "ros2_msgs/Imu.hpp"
+#include "BNO055.hpp"
 
-UartLinkPublisher<float_t, float_t, float_t> pub(uart_link, 0x01);
-UartLinkSubscriber<float_t, float_t, float_t> sub(uart_link, 0x01);
+#include <vector>
+#include <string>
 
-void receive_callback(float_t goal_0, float_t goal_1, float_t goal_2) {
-  pub.publish(goal_0, goal_1, goal_2);
+#if 0
+
+UartLink uart1(USBTX, USBRX, 115200, nullptr, 0);
+UartLink uart2(PA_9, PA_10, 115200, nullptr, 0);
+
+UartLinkSubscriber<float, int, double, char*> sub(uart1, 2);
+UartLinkPublisher<float, int, double, char*> pub(uart2, 1);
+
+void sub_callback(float a, int b, double c, char* d) {
+    pub.publish(a, b, c, d);
 }
 
 int main() {
     sub.set_callback(sub_callback);
 }
-#else
-#include <mbed.h>
-#include "RogiLinkFlex/UartLink.hpp"
+
+#elif 0
 
 UartLink uart1(USBTX, USBRX, 115200, nullptr, 1);
 UartLink uart2(PA_9, PA_10, 115200, nullptr, 1);
@@ -33,4 +39,61 @@ int main() {
     sub.set_callback(sub_callback);
 }
 
+#else
+
+UartLink uart(USBTX, USBRX, 115200, nullptr, 0);
+
+UartLinkSubscriber<int, char*> sub(uart, 2);
+UartLinkPublisher<sensor_msgs::msg::Imu> pub(uart, 2);
+
+int rate = 0;// imu output rate [Hz]
+bool reset_flag = false;
+bool is_ready = false;
+
+
+void sub_callback(int _length, char* _cmd) {
+
+    vector<string> cmds;
+    string item;
+    for (int i = 0; i < _length; i++) {
+        if (_cmd[i] == ',') {
+            if (!item.empty())
+                cmds.push_back(item);
+            item.clear();
+        }
+        else {
+            item += _cmd[i];
+        }
+    }
+    if (!item.empty())
+        cmds.push_back(item);
+
+    if(cmds[0] == "Rate"){
+        rate = std::stoi(cmds[1]);
+        is_ready = true;
+    }
+    else if (cmds[0] == "Reset")
+    {
+        reset_flag = true;
+    }
+    else{
+        return;
+    }
+    
+}
+
+void pub_callback(){
+    
+}
+
+int main() {
+    sub.set_callback(sub_callback);
+
+    while (is_ready);
+
+    IMU::BNO055 bno(PC_10, PC_11, std::chrono::milliseconds(1000 / rate));
+
+    
+    
+}
 #endif

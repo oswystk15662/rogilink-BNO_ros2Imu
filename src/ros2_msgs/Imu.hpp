@@ -27,12 +27,21 @@ namespace sensor_msgs
             std_msgs::Header header;
             geometry_msgs::msg::Quaternion orientation;
             double orientation_covariance[9];
-
+            void set_OrientationCovariance(const double (&a)[9]){
+                std::copy(&a[0], &a[0]+9, orientation_covariance);
+            }
+            
             geometry_msgs::msg::Vector3 angular_velocity;
             double angular_velocity_covariance[9];
+            void set_AngleVelCovariance(const double (&a)[9]){
+                std::copy(&a[0], &a[0]+9, angular_velocity_covariance);
+            }
 
             geometry_msgs::msg::Vector3 linear_acceleration;
             double linear_acceleration_covariance[9];
+            void set_LinearAccelCovariance(const double (&a)[9]){
+                std::copy(&a[0], &a[0]+9, linear_acceleration_covariance);
+            }
         }Imu;
     } // namespace msg
     

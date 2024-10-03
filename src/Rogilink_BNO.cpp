@@ -1,10 +1,11 @@
 #include "Rogilink_BNO.hpp"
 
-Rogilink_BNO::Rogilink_BNO(PinName _tx, PinName _rx)
+Rogilink_BNO::Rogilink_BNO(uint8_t _id, PinName _tx, PinName _rx)
     : queue(32 * EVENTS_QUEUE_SIZE)
     , uart(USBTX, USBRX, 115200, nullptr, 0)
     , sub(uart, 2)
     , pub(uart, 2)
+    , bno_id(_id)
     , tx(_tx)
     , rx(_rx)
 
@@ -88,7 +89,7 @@ void Rogilink_BNO::pub_callback(){
             0, 0, 0.05
         });
 
-        pub.publish(*msg);
+        pub.publish(this->bno_id, *msg);
     }
 }
 

@@ -42,7 +42,53 @@ namespace sensor_msgs
             void set_LinearAccelCovariance(const double (&a)[9]){
                 std::copy(&a[0], &a[0]+9, linear_acceleration_covariance);
             }
+
+            // シリアライザ
+            void serialize(uint8_t* data) {
+                header.serialize(data);
+                memcpy(data + header.SIZE_HEADER, &orientation, 8U * 4);
+                memcpy(data + header.SIZE_HEADER + 32U, &orientation_covariance, 8U * 9);
+                memcpy(data + header.SIZE_HEADER + 104U, &angular_velocity, 8U * 3);
+                memcpy(data + header.SIZE_HEADER + 128U, &angular_velocity_covariance, 8U * 9);
+                memcpy(data + header.SIZE_HEADER + 200U, &linear_acceleration, 8U * 3);
+                memcpy(data + header.SIZE_HEADER + 224U, &linear_acceleration_covariance, 8U * 9);
+            }
+
+            // デシリアライザ
+            void deserialize(const uint8_t* data, size_t* size) {
+                // header.deserialize(data, header.SIZE_HEADER);
+                // memcpy(&orientation, data+header.SIZE_HEADER, 8U*4);
+                // memcpy(&b, data + sizeof(int), sizeof(float));
+                // memcpy(&c, data + sizeof(int) + sizeof(float), sizeof(char));
+                // *size = header.SIZE_HEADER + 296U;
+            };
         }Imu;
+
+        typedef struct 
+        {
+            std_msgs::Header header;
+            geometry_msgs::msg::Quaternion orientation;
+            geometry_msgs::msg::Vector3 angular_velocity;
+            geometry_msgs::msg::Vector3 linear_acceleration;
+
+            // シリアライザ
+            void serialize(uint8_t* data) {
+                header.serialize(data);
+                memcpy(data + header.SIZE_HEADER, &orientation, 8U * 4);
+                memcpy(data + header.SIZE_HEADER + 32U, &angular_velocity, 8U * 3);
+                memcpy(data + header.SIZE_HEADER + 56U, &linear_acceleration, 8U * 3);
+            }
+
+            // デシリアライザ
+            void deserialize(const uint8_t* data, size_t* size) {
+                const uint8_t *data_ptr = data;
+                header.deserialize(data_ptr, header.SIZE_HEADER);
+                memcpy(&orientation, data + header.SIZE_HEADER, 8U * 4);
+                memcpy(&angular_velocity, data + header.SIZE_HEADER + 32U, 8U * 3);
+                memcpy(&linear_acceleration, data + header.SIZE_HEADER + 56U, 8U * 3);
+                *size = header.SIZE_HEADER + 296U;
+            };
+        }ImuwithoutCovariance;
     } // namespace msg
     
 } // namespace sensor_msgs

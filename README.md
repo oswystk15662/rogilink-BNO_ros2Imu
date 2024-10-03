@@ -1,7 +1,6 @@
-# rogilinkFlex-f446
+# rogilink-BNO
 
-現在開発中の汎用通信ライブラリrogilinkFlexのSTM32F446実装です。(おそらくmbed OSならF446じゃなくても動きます。)
-UART通信とCAN通信に対応しています。従来のrogilinkに比べて、送受信するデータ型を柔軟に設定できるようになっており、データ変換も自動で行います。マイコン同士の通信、マイコンとros2の通信の両方に対応しています。
+現在開発中の汎用通信ライブラリrogilinkFlexのSTM32F446実装を、使ってBNOのデータをROS2の標準メッセージであるsensor_msgs::msg::Imuに合わせて
 
 ## Other Environments
 

@@ -19,9 +19,10 @@ private:
     UartLink uart;
 
     UartLinkSubscriber<int, char*> sub;
-    UartLinkPublisher<sensor_msgs::msg::Imu> pub;
+    UartLinkPublisher<int, sensor_msgs::msg::Imu> pub;
 
     std::unique_ptr<IMU::BNO055> bno;
+    uint8_t bno_id;
     PinName tx, rx;
 
     int rate = 0;// imu output rate [Hz]
@@ -35,6 +36,6 @@ private:
     void reset_watchdog();
 
 public:
-    Rogilink_BNO(PinName _tx, PinName _rx);
+    Rogilink_BNO(uint8_t _id, PinName _tx, PinName _rx);
     ~Rogilink_BNO();
 };
